@@ -35,7 +35,7 @@ MEMORY_ID = os.environ["MEMORY_CUSTOMERSUPPORTMEMORY_ID"]
 GATEWAY_URL = json.loads(Path(__file__).with_name("support_gateway.json").read_text())[
     "url"
 ]
-MODEL_ID = os.getenv("MODEL_ID", "global.anthropic.claude-sonnet-4-6")
+MODEL_ID = os.getenv("MODEL_ID", "anthropic.claude-sonnet-4-6")
 
 SYSTEM_PROMPT = """You are a production customer-support agent.
 
