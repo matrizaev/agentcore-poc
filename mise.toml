@@ -1,0 +1,9 @@
+min_version = "2024.9.5"
+
+[tools]
+node = "22"
+python = "3.13"
+uv = "latest"
+aws-cli = "2"
+"npm:@aws/agentcore" = "0.28.1"
+ruff = "latest"

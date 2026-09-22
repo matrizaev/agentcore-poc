@@ -1,0 +1,35 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadAndUpdateOrders",
+      "Effect": "Allow",
+      "Action": ["dynamodb:GetItem", "dynamodb:UpdateItem"],
+      "Resource": "arn:aws:dynamodb:eu-west-1:002040198363:table/agentcore-support-orders"
+    },
+    {
+      "Sid": "ReadCustomers",
+      "Effect": "Allow",
+      "Action": ["dynamodb:GetItem"],
+      "Resource": "arn:aws:dynamodb:eu-west-1:002040198363:table/agentcore-support-customers"
+    },
+    {
+      "Sid": "ReadWriteRefunds",
+      "Effect": "Allow",
+      "Action": ["dynamodb:GetItem", "dynamodb:PutItem"],
+      "Resource": "arn:aws:dynamodb:eu-west-1:002040198363:table/agentcore-support-refunds"
+    },
+    {
+      "Sid": "CreateLogGroup",
+      "Effect": "Allow",
+      "Action": ["logs:CreateLogGroup"],
+      "Resource": "arn:aws:logs:eu-west-1:002040198363:*"
+    },
+    {
+      "Sid": "WriteLambdaLogs",
+      "Effect": "Allow",
+      "Action": ["logs:CreateLogStream", "logs:PutLogEvents"],
+      "Resource": "arn:aws:logs:eu-west-1:002040198363:log-group:/aws/lambda/agentcore-support-business-tools:*"
+    }
+  ]
+}

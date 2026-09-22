@@ -1,0 +1,67 @@
+{
+  "targets": {
+    "default": {
+      "resources": {
+        "runtimes": {
+          "CustomerSupportAgent": {
+            "runtimeId": "AgentCorePoc_CustomerSupportAgent-ah0cRJ94N3",
+            "runtimeArn": "arn:aws:bedrock-agentcore:eu-west-1:002040198363:runtime/AgentCorePoc_CustomerSupportAgent-ah0cRJ94N3",
+            "roleArn": "arn:aws:iam::002040198363:role/AgentCore-AgentCorePoc-de-ApplicationAgentCustomerS-F0QjHdiTSLHU"
+          }
+        },
+        "memories": {
+          "CustomerSupportMemory": {
+            "memoryId": "AgentCorePoc_CustomerSupportMemory-htm4OO8nM3",
+            "memoryArn": "arn:aws:bedrock-agentcore:eu-west-1:002040198363:memory/AgentCorePoc_CustomerSupportMemory-htm4OO8nM3"
+          }
+        },
+        "mcp": {
+          "gateways": {
+            "SupportGateway": {
+              "gatewayId": "agentcorepoc-supportgateway-u6umw2srws",
+              "gatewayArn": "arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-u6umw2srws",
+              "gatewayUrl": "https://agentcorepoc-supportgateway-u6umw2srws.gateway.bedrock-agentcore.eu-west-1.amazonaws.com/mcp",
+              "targets": {
+                "BusinessTools": {
+                  "targetId": "6SX3UKD05J"
+                }
+              }
+            }
+          }
+        },
+        "credentials": {
+          "SupportGatewayAuth": {
+            "credentialProviderArn": "arn:aws:bedrock-agentcore:eu-west-1:002040198363:token-vault/default/oauth2credentialprovider/SupportGatewayAuth",
+            "clientSecretArn": "arn:aws:secretsmanager:eu-west-1:002040198363:secret:bedrock-agentcore-identity!default/oauth2/SupportGatewayAuth-d2f52bfd-uzbTDS",
+            "callbackUrl": "https://bedrock-agentcore.eu-west-1.amazonaws.com/identities/oauth2/callback/8a0e7a25-f6db-42e7-b236-8e266421184c"
+          }
+        },
+        "policyEngines": {
+          "SupportPolicyEngine": {
+            "policyEngineId": "AgentCorePoc_SupportPolicyEngine-3fvzi_624q",
+            "policyEngineArn": "arn:aws:bedrock-agentcore:eu-west-1:002040198363:policy-engine/AgentCorePoc_SupportPolicyEngine-3fvzi_624q"
+          }
+        },
+        "policies": {
+          "SupportPolicyEngine/AllowGetOrder": {
+            "policyId": "AllowGetOrder-d74jmd7imi",
+            "policyArn": "arn:aws:bedrock-agentcore:eu-west-1:002040198363:policy-engine/AgentCorePoc_SupportPolicyEngine-3fvzi_624q/policy/AllowGetOrder-d74jmd7imi",
+            "engineName": "SupportPolicyEngine"
+          },
+          "SupportPolicyEngine/AllowGetCustomer": {
+            "policyId": "AllowGetCustomer-i3iknk2y65",
+            "policyArn": "arn:aws:bedrock-agentcore:eu-west-1:002040198363:policy-engine/AgentCorePoc_SupportPolicyEngine-3fvzi_624q/policy/AllowGetCustomer-i3iknk2y65",
+            "engineName": "SupportPolicyEngine"
+          },
+          "SupportPolicyEngine/AllowRefundUpTo1000": {
+            "policyId": "AllowRefundUpTo1000-avn96c243g",
+            "policyArn": "arn:aws:bedrock-agentcore:eu-west-1:002040198363:policy-engine/AgentCorePoc_SupportPolicyEngine-3fvzi_624q/policy/AllowRefundUpTo1000-avn96c243g",
+            "engineName": "SupportPolicyEngine"
+          }
+        },
+        "stackName": "AgentCore-AgentCorePoc-default",
+        "deployHash": "45cda7698c1e22f0"
+      }
+    }
+  }
+}

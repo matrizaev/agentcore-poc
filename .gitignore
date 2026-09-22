@@ -1,0 +1,28 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# AgentCore local secrets
+agentcore/.env.local
+
+# Generic secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Build output
+.aws-sam/
+cdk.out/
+*.zip
+
+.idea/
+.vscode/
+.DS_Store
+
+docs/evidence/raw/

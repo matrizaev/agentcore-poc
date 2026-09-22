@@ -1,0 +1,121 @@
+{
+  "$schema": "https://schema.agentcore.aws.dev/v1/agentcore.json",
+  "name": "AgentCorePoc",
+  "version": 1,
+  "managedBy": "CDK",
+  "tags": {
+    "agentcore:created-by": "agentcore-cli",
+    "agentcore:project-name": "AgentCorePoc"
+  },
+  "runtimes": [
+    {
+      "name": "CustomerSupportAgent",
+      "build": "CodeZip",
+      "entrypoint": "main.py",
+      "codeLocation": "app/CustomerSupportAgent/",
+      "runtimeVersion": "PYTHON_3_14",
+      "networkMode": "PUBLIC",
+      "instrumentation": {
+        "enableOtel": true
+      },
+      "protocol": "HTTP"
+    }
+  ],
+  "memories": [
+    {
+      "name": "CustomerSupportMemory",
+      "eventExpiryDuration": 30,
+      "strategies": [
+        {
+          "type": "USER_PREFERENCE",
+          "namespaceTemplates": [
+            "/users/{actorId}/preferences"
+          ]
+        }
+      ]
+    }
+  ],
+  "knowledgeBases": [],
+  "credentials": [
+    {
+      "authorizerType": "OAuthCredentialProvider",
+      "name": "SupportGatewayAuth",
+      "discoveryUrl": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_IoS3XzU3i/.well-known/openid-configuration",
+      "scopes": [
+        "support-api/read",
+        "support-api/refund"
+      ],
+      "vendor": "CustomOauth2"
+    }
+  ],
+  "evaluators": [],
+  "onlineEvalConfigs": [],
+  "agentCoreGateways": [
+    {
+      "name": "SupportGateway",
+      "protocolType": "MCP",
+      "description": "Gateway for SupportGateway",
+      "targets": [
+        {
+          "name": "BusinessTools",
+          "targetType": "lambdaFunctionArn",
+          "lambdaFunctionArn": {
+            "lambdaArn": "arn:aws:lambda:eu-west-1:002040198363:function:agentcore-support-business-tools",
+            "toolSchemaFile": "gateway/tools.json"
+          }
+        }
+      ],
+      "authorizerType": "CUSTOM_JWT",
+      "authorizerConfiguration": {
+        "customJwtAuthorizer": {
+          "discoveryUrl": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_IoS3XzU3i/.well-known/openid-configuration",
+          "allowedClients": [
+            "78f36g46drv7e75e15r1th8kut"
+          ]
+        }
+      },
+      "enableSemanticSearch": true,
+      "exceptionLevel": "NONE",
+      "policyEngineConfiguration": {
+        "policyEngineName": "SupportPolicyEngine",
+        "mode": "ENFORCE"
+      }
+    }
+  ],
+  "policyEngines": [
+    {
+      "name": "SupportPolicyEngine",
+      "policies": [
+        {
+          "name": "AllowGetOrder",
+          "statement": "permit(\n  principal is AgentCore::OAuthUser,\n  action == AgentCore::Action::\"BusinessTools___get_order\",\n  resource == AgentCore::Gateway::\"arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-u6umw2srws\"\n)\nwhen {\n  principal.hasTag(\"scope\") &&\n  principal.getTag(\"scope\") like \"*support-api/read*\"\n};",
+          "sourceFile": "gateway/policies/allow_get_order.cedar",
+          "validationMode": "FAIL_ON_ANY_FINDINGS",
+          "enforcementMode": "ACTIVE",
+          "authorizationPhase": "INITIATE"
+        },
+        {
+          "name": "AllowGetCustomer",
+          "statement": "permit(\n  principal is AgentCore::OAuthUser,\n  action == AgentCore::Action::\"BusinessTools___get_customer\",\n  resource == AgentCore::Gateway::\"arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-u6umw2srws\"\n)\nwhen {\n  principal.hasTag(\"scope\") &&\n  principal.getTag(\"scope\") like \"*support-api/read*\"\n};",
+          "sourceFile": "gateway/policies/allow_get_customer.cedar",
+          "validationMode": "FAIL_ON_ANY_FINDINGS",
+          "enforcementMode": "ACTIVE",
+          "authorizationPhase": "INITIATE"
+        },
+        {
+          "name": "AllowRefundUpTo1000",
+          "statement": "permit(\n  principal is AgentCore::OAuthUser,\n  action == AgentCore::Action::\"BusinessTools___refund_customer\",\n  resource == AgentCore::Gateway::\"arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-u6umw2srws\"\n)\nwhen {\n  principal.hasTag(\"scope\") &&\n  principal.getTag(\"scope\") like \"*support-api/refund*\" &&\n  context.input.amount > 0 &&\n  context.input.amount <= 1000\n};",
+          "sourceFile": "gateway/policies/allow_refund_upto_1000.cedar",
+          "validationMode": "FAIL_ON_ANY_FINDINGS",
+          "enforcementMode": "ACTIVE",
+          "authorizationPhase": "INITIATE"
+        }
+      ]
+    }
+  ],
+  "configBundles": [],
+  "abTests": [],
+  "harnesses": [],
+  "datasets": [],
+  "payments": []
+}
