@@ -20,6 +20,8 @@ agentcore/.env.local
 .aws-sam/
 cdk.out/
 *.zip
+artifacts/
+agentcore/agentcore.json.before-e2e-*
 
 .idea/
 .vscode/

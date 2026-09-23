@@ -3,9 +3,11 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import time
 import uuid
 from collections.abc import Callable
+from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
@@ -35,7 +37,9 @@ MEMORY_ID = os.environ["MEMORY_CUSTOMERSUPPORTMEMORY_ID"]
 GATEWAY_URL = json.loads(Path(__file__).with_name("support_gateway.json").read_text())[
     "url"
 ]
-MODEL_ID = os.getenv("MODEL_ID", "anthropic.claude-sonnet-4-6")
+MODEL_ID = os.getenv("MODEL_ID", "eu.amazon.nova-pro-v1:0")
+
+THINKING_BLOCK = re.compile(r"<thinking>.*?</thinking>\s*", re.IGNORECASE | re.DOTALL)
 
 SYSTEM_PROMPT = """You are a production customer-support agent.
 
@@ -123,12 +127,20 @@ def call_mcp_with_retry(
             with tracer.start_as_current_span("gateway.tool.attempt") as span:
                 span.set_attribute("tool.name", tool_name)
                 span.set_attribute("retry.attempt", attempt)
-                return mcp_client.call_tool_sync(
+                result = mcp_client.call_tool_sync(
                     tool_use_id=f"{tool_name}-{uuid.uuid4()}",
                     name=f"BusinessTools___{tool_name}",
                     arguments=arguments,
-                    read_timeout_seconds=timeout_seconds,
+                    read_timeout_seconds=timedelta(seconds=timeout_seconds),
                 )
+                if result.get("status") == "error":
+                    message = " ".join(
+                        str(item.get("text", ""))
+                        for item in result.get("content", [])
+                        if isinstance(item, dict)
+                    ).strip()
+                    raise RuntimeError(message or f"MCP tool {tool_name} failed")
+                return result
         except Exception as exc:
             last_exc = exc
             is_retryable = retryable(exc)
@@ -266,7 +278,7 @@ async def invoke(payload: dict[str, Any], context: Any) -> dict[str, Any]:
                 span.set_attribute("strands.stop_reason", str(result.stop_reason))
                 return {
                     "ok": True,
-                    "response": str(result),
+                    "response": THINKING_BLOCK.sub("", str(result)).strip(),
                     "stop_reason": str(result.stop_reason),
                     "runtime_session_id": runtime_session_id,
                     "actor_id": actor_id,

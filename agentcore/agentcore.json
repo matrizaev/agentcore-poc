@@ -40,7 +40,7 @@
     {
       "authorizerType": "OAuthCredentialProvider",
       "name": "SupportGatewayAuth",
-      "discoveryUrl": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_IoS3XzU3i/.well-known/openid-configuration",
+      "discoveryUrl": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_iUa6n4gqd/.well-known/openid-configuration",
       "scopes": [
         "support-api/read",
         "support-api/refund"
@@ -68,9 +68,9 @@
       "authorizerType": "CUSTOM_JWT",
       "authorizerConfiguration": {
         "customJwtAuthorizer": {
-          "discoveryUrl": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_IoS3XzU3i/.well-known/openid-configuration",
+          "discoveryUrl": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_iUa6n4gqd/.well-known/openid-configuration",
           "allowedClients": [
-            "78f36g46drv7e75e15r1th8kut"
+            "14s3762sqepb9o7cje687hrack"
           ]
         }
       },
@@ -88,7 +88,7 @@
       "policies": [
         {
           "name": "AllowGetOrder",
-          "statement": "permit(\n  principal is AgentCore::OAuthUser,\n  action == AgentCore::Action::\"BusinessTools___get_order\",\n  resource == AgentCore::Gateway::\"arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-u6umw2srws\"\n)\nwhen {\n  principal.hasTag(\"scope\") &&\n  principal.getTag(\"scope\") like \"*support-api/read*\"\n};",
+          "statement": "permit(principal is AgentCore::OAuthUser, action == AgentCore::Action::\"BusinessTools___get_order\", resource == AgentCore::Gateway::\"arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-ww6lrtdafh\")\nwhen { principal.hasTag(\"scope\") && principal.getTag(\"scope\") like \"*support-api/read*\" };",
           "sourceFile": "gateway/policies/allow_get_order.cedar",
           "validationMode": "FAIL_ON_ANY_FINDINGS",
           "enforcementMode": "ACTIVE",
@@ -96,7 +96,7 @@
         },
         {
           "name": "AllowGetCustomer",
-          "statement": "permit(\n  principal is AgentCore::OAuthUser,\n  action == AgentCore::Action::\"BusinessTools___get_customer\",\n  resource == AgentCore::Gateway::\"arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-u6umw2srws\"\n)\nwhen {\n  principal.hasTag(\"scope\") &&\n  principal.getTag(\"scope\") like \"*support-api/read*\"\n};",
+          "statement": "permit(principal is AgentCore::OAuthUser, action == AgentCore::Action::\"BusinessTools___get_customer\", resource == AgentCore::Gateway::\"arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-ww6lrtdafh\")\nwhen { principal.hasTag(\"scope\") && principal.getTag(\"scope\") like \"*support-api/read*\" };",
           "sourceFile": "gateway/policies/allow_get_customer.cedar",
           "validationMode": "FAIL_ON_ANY_FINDINGS",
           "enforcementMode": "ACTIVE",
@@ -104,7 +104,7 @@
         },
         {
           "name": "AllowRefundUpTo1000",
-          "statement": "permit(\n  principal is AgentCore::OAuthUser,\n  action == AgentCore::Action::\"BusinessTools___refund_customer\",\n  resource == AgentCore::Gateway::\"arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-u6umw2srws\"\n)\nwhen {\n  principal.hasTag(\"scope\") &&\n  principal.getTag(\"scope\") like \"*support-api/refund*\" &&\n  context.input.amount > 0 &&\n  context.input.amount <= 1000\n};",
+          "statement": "permit(principal is AgentCore::OAuthUser, action == AgentCore::Action::\"BusinessTools___refund_customer\", resource == AgentCore::Gateway::\"arn:aws:bedrock-agentcore:eu-west-1:002040198363:gateway/agentcorepoc-supportgateway-ww6lrtdafh\")\nwhen { principal.hasTag(\"scope\") && principal.getTag(\"scope\") like \"*support-api/refund*\" && context.input.amount > 0 && context.input.amount <= 1000 };",
           "sourceFile": "gateway/policies/allow_refund_upto_1000.cedar",
           "validationMode": "FAIL_ON_ANY_FINDINGS",
           "enforcementMode": "ACTIVE",
